@@ -238,6 +238,50 @@ func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	return shim.Success(nil)
 }
 
+
+// iXelerate
+func createPackage(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var err error
+	fmt.Println("starting createPackage")
+
+	if len(args) != 3 {
+		return shim.Error("Incorrect number of arguments. Expecting 3")
+	}
+
+	//input sanitation
+	err = sanitize_arguments(args)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	var package Package
+	package.ID = args[0]
+	package.Owner = args[1]
+	package.Status = "creator"
+	package.Content = args[2]
+	package.Location = "level 1"
+	fmt.Println(package)
+
+	// //check if user already exists
+	// _, err = get_owner(stub, owner.Id)
+	// if err == nil {
+	// 	fmt.Println("This owner already exists - " + owner.Id)
+	// 	return shim.Error("This owner already exists - " + owner.Id)
+	// }
+
+	//store user
+	packageAsBytes, _ := json.Marshal(package)                         //convert to array of bytes
+	err = stub.PutState(package.ID, packageAsBytes) //store package by its Id
+	if err != nil {
+		fmt.Println("Could not store package")
+		return shim.Error(err.Error())
+	}
+	
+
+	fmt.Println("- end createPackage")
+	return shim.Success(nil)
+}
+
 // ============================================================================================================================
 // Set Owner on Marble
 //
