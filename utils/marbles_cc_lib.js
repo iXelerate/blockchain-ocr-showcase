@@ -105,6 +105,69 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
 		});
 	};
 
+	// iXelerate: create a new package
+	marbles_chaincode.create_a_package = function (options, cb) {
+		console.log('');
+		logger.info('Creating a package...');
+
+		var opts = {
+			peer_urls: g_options.peer_urls,
+			peer_tls_opts: g_options.peer_tls_opts,
+			channel_id: g_options.channel_id,
+			chaincode_id: g_options.chaincode_id,
+			chaincode_version: g_options.chaincode_version,
+			event_urls: g_options.event_urls,
+			endorsed_hook: options.endorsed_hook,
+			ordered_hook: options.ordered_hook,
+			cc_function: 'createPackage',
+			cc_args: [
+				options.args.id,
+				options.args.name,
+				options.args.owner,
+				options.args.content
+			],
+		};
+		fcw.invoke_chaincode(enrollObj, opts, function (err, resp) {
+			if (cb) {
+				if (!resp) resp = {};
+				resp.id = opts.cc_args[0];			//pass package id back
+				cb(err, resp);
+			}
+		});
+	};
+
+	// iXelerate: change package location
+	marbles_chaincode.change_location = function (options, cb) {
+		console.log('');
+		logger.info('Changin package location...');
+
+		var opts = {
+			peer_urls: g_options.peer_urls,
+			peer_tls_opts: g_options.peer_tls_opts,
+			channel_id: g_options.channel_id,
+			chaincode_id: g_options.chaincode_id,
+			chaincode_version: g_options.chaincode_version,
+			event_urls: g_options.event_urls,
+			endorsed_hook: options.endorsed_hook,
+			ordered_hook: options.ordered_hook,
+			cc_function: 'changeLocation',
+			cc_args: [
+				options.args.id,
+				options.args.owner,
+				options.args.status,
+				options.args.location
+			],
+		};
+		// fcw.invoke_chaincode(enrollObj, opts, cb);
+		fcw.invoke_chaincode(enrollObj, opts, function (err, resp) {
+			if (cb) {
+				if (!resp) resp = {};
+				resp.id = opts.cc_args[0];			//pass package id back
+				cb(err, resp);
+			}
+		});
+	};
+
 	//get marble
 	marbles_chaincode.get_marble = function (options, cb) {
 		logger.info('fetching marble ' + options.marble_id + ' list...');

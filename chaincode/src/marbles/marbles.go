@@ -61,8 +61,9 @@ type OwnerRelation struct {
 
 // iXelerate
 // Package Asset
-type Package struct {
+type PackageAsset struct {
 	ID       string `json:"id"`
+	Name     string `json:"name"`
 	Owner    string `json:"owner"`
 	Status   string `json:"status"`
 	Content  string `json:"content"`
@@ -167,7 +168,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return init_marble(stub, args)
 	} else if function == "set_owner" { //change owner of a marble
 		return set_owner(stub, args)
-	} else if function == "nit_owner" { //create a new marble owner
+	} else if function == "init_owner" { //create a new marble owner
 		return init_owner(stub, args)
 	} else if function == "read_everything" { //read everything, (owners + marbles + companies)
 		return read_everything(stub)
@@ -179,14 +180,13 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return disable_owner(stub, args)
 	} else if function == "createPackage" { // iXelerate
 		return createPackage(stub, args)
+	} else if function == "changeLocation" { // iXelerate
+		return changeLocation(stub, args)
 	}
-	// else if function == "changePackageOwner" { // iXelerate
-	// 	return createPacakgeOwner(stub, args)
-	// }
 
 	// error out
 	fmt.Println("Received unknown invoke function name - " + function)
-	return shim.Error("Received unknown invoke function ALL YOUR BASE YOUR BASE! - '" + function + "'")
+	return shim.Error("Received unknown invoke function - '" + function + "'")
 }
 
 // ============================================================================================================================

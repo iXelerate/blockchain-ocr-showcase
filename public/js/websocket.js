@@ -295,7 +295,7 @@ function get_everything_or_else(attempt) {
 		else {
 			console.log('\n\n! [timeout] did not get owners in time, hopeless', attempt, '\n\n');
 		}
-	}, 5000 + getRandomInt(0, 10000));
+	}, 500000 + getRandomInt(0, 10000));
 }
 
 //emtpy trash marble wrap

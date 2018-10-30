@@ -85,6 +85,41 @@ module.exports = function (cp, fcw, logger) {
 				if (err != null) send_err(err, data);
 				else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
 			});
+		} 
+		
+		
+		// iXelerate: create a new package
+		// ws.send(JSON.stringify({ type: 'create-package', id: 'uuid1223144566', name: 'Clark Kent' owner: 'LexCorp', content: 'Vibranium' }))
+		else if (data.type === 'create-package') {
+			logger.info('[ws] create package req');
+			options.args = {
+				id: data.id,
+				name: data.name,
+				owner: data.owner,
+				content: data.content
+			};
+
+			marbles_lib.create_a_package(options, function (err, resp) {
+				if (err != null) send_err(err, data);
+				else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
+			});
+		}
+
+		// iXelerate: change location of package
+		// ws.send(JSON.stringify({ type: 'change-location', id: 'uuid1223144566', owner: 'logistics', status: 'shipping', location: 'floor-2' }))
+		else if (data.type === 'change-location') {
+			logger.info('[ws] changing location of the package');
+			options.args = {
+				id: data.id,
+				owner: data.owner,
+				status: data.status,
+				location: data.location
+			};
+
+			marbles_lib.change_location(options, function (err, resp) {
+				if (err != null) send_err(err, data);
+				else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
+			});
 		}
 
 		// transfer a marble
